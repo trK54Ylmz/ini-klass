@@ -1,6 +1,6 @@
-## ini config
+## ini config
 
-ini file parser.
+The ini file parser.
 
 ### Install
 

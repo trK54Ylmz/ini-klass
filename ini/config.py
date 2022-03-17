@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-from attrdict import AttrMap
+from attrdict2 import AttrMap
 from configobj import ConfigObj
 
 
