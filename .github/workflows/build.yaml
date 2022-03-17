@@ -1,0 +1,96 @@
+name: Package build
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    name: "Build on ${{ matrix.platform.name }} with Python ${{ matrix.python.version }}"
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      matrix:
+        python: [
+          {
+            name: "cp36-cp36m",
+            version: "3.6"
+          },
+          {
+            name: "cp37-cp37m",
+            version: "3.7"
+          },
+          {
+            name: "cp38-cp38",
+            version: "3.8"
+          },
+          {
+            name: "cp39-cp39",
+            version: "3.9"
+          },
+          {
+            name: "cp310-cp310",
+            version: "3.10"
+          },
+        ]
+        platform: [
+          {
+            os: "ubuntu-latest",
+            python-architecture: "x64",
+            name: "Linux x64"
+          },
+          {
+            os: "macOS-latest",
+            python-architecture: "x64",
+            name: "macOS x64"
+          },
+          {
+            os: "windows-latest",
+            python-architecture: "x86",
+            name: "Windows x86"
+          },
+          {
+            os: "windows-latest",
+            python-architecture: "x64",
+            name: "Windows x64"
+          },
+        ]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python.version }}
+          architecture: ${{ matrix.platform.python-architecture }}
+      - name: Install dependencies
+        run: pip install attrdict2==0.0.1 configobj==5.0.6
+      - name: Install whell
+        run: pip install wheel
+      - name: Lint with flake8
+        run: |
+          pip install --disable-pip-version-check flake8
+          flake8 . --count --max-complexity=20 --max-line-length=100 --statistics
+        if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
+      - name: Lint with pylint
+        run: |
+          pip install --disable-pip-version-check pylint
+          pylint `find ini/ | grep '.*.py$'`
+        if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
+      - name: Build package 
+        run: python setup.py build
+      - name: Install package
+        run: python setup.py install
+      - name: Build package dist
+        run: python setup.py bdist_wheel
+      - name: Run pytest
+        run: python -m unittest test
+      - name: Upload package
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GIT_REPO: ${{ secrets.GIT_REPO }}
+        run: |
+          pip install pygithub
+          python .github/build/upload.py
+        if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
+  

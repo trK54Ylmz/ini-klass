@@ -4,7 +4,7 @@ description = 'ini file parser.'
 
 try:
     long_description = open('readme.md', 'r', encoding='utf8').read()
-except Exception as _:
+except Exception:
     long_description = description
 
 setup(
@@ -32,7 +32,7 @@ setup(
         'Programming Language :: Python :: 3.10',
     ],
     install_requires=[
+        'attrdict2==0.0.2',
         'configobj==5.0.6',
-        'attrdict==2.0.1',
     ],
 )
