@@ -1,4 +1,4 @@
-## ini config
+## ini klass
 
 The ini file parser.
 
@@ -7,7 +7,7 @@ The ini file parser.
 To install a wheel from PyPI,
 
 ```bash
-pip install --upgrade ini-config
+pip install --upgrade ini-klass
 ```
 
 ### Usage

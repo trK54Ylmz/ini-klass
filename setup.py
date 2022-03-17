@@ -8,14 +8,14 @@ except Exception:
     long_description = description
 
 setup(
-    name='ini-config',
+    name='ini-klass',
     version='0.0.1',
     author='Tarik Yilmaz',
     author_email='tarikyilmaz.54@gmail.com',
     description=description,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/trk54ylmz/ini-config',
+    url='https://github.com/trk54ylmz/ini-klass',
     include_package_data=True,
     packages=find_packages(),
     classifiers=[
