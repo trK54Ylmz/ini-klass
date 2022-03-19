@@ -31,8 +31,4 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    install_requires=[
-        'attrdict2==0.0.2',
-        'configobj==5.0.6',
-    ],
 )
