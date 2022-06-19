@@ -74,8 +74,8 @@ jobs:
         if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
       - name: Lint with pylint
         run: |
-          pip install --disable-pip-version-check pylint
-          pylint `find ini/ | grep '.*.py$'`
+          pip install --disable-pip-version-check pylint pylint_runner
+          pylint_runner
         if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
       - name: Build package 
         run: python setup.py build
