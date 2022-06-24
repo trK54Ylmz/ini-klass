@@ -8,7 +8,6 @@ disable=
     missing-function-docstring,
     wrong-import-order,
     unidiomatic-typecheck,
-    no-self-use,
     ungrouped-imports,
     too-many-instance-attributes,
     duplicate-code,
@@ -35,3 +34,6 @@ max-line-length=100
 
 # Max argument limit is 10 for functions and methods
 max-args=10
+
+# Load all type of extensions including C, Rust etc.
+unsafe-load-any-extension=yes

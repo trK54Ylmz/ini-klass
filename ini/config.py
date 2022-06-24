@@ -3,11 +3,16 @@ import re
 import sys
 from attrdict2 import AttrMap
 from configobj import ConfigObj
+from typing import Optional
+
+
+class IniKlassException(Exception):
+    pass
 
 
 class ConfigParser:
     @staticmethod
-    def to_object(d):
+    def to_object(d: ConfigObj) -> AttrMap:
         """
         Convert config object to custom object
 
@@ -17,6 +22,7 @@ class ConfigParser:
         """
         top = AttrMap(sequence_type=list)
         seq = tuple, list, set, frozenset
+
         for i, j in d.items():
             if isinstance(j, dict):
                 setattr(top, i, ConfigParser.to_object(j))
@@ -42,12 +48,12 @@ class ConfigParser:
         return top
 
     @staticmethod
-    def load(path=None):
+    def load(path: Optional[str] = None) -> AttrMap:
         """
         Load configuration by given path or `CONFIG` environment.
         The environment variable is primary lookup.
 
-        :param str or None path: the configuration path
+        :param Optional[str] path: the configuration path
         :return: the configuration object
         :rtype: attrdict.AttrMap
         """
@@ -57,18 +63,18 @@ class ConfigParser:
             elif len(sys.argv) > 1:
                 path = sys.argv[1]
             else:
-                raise Exception('Configuration parameter must be set')
+                raise IniKlassException('Configuration parameter must be set')
 
         if path is None or len(path.strip()) == 0:
             raise Exception('Configuration path is missing')
 
         if not os.path.exists(path):
-            raise Exception(f'Configuration file does not exists "{path}"')
+            raise IniKlassException(f'Configuration file does not exists "{path}"')
 
         conf = ConfigObj(path)
 
         # size of sections must be greater than one
         if len(conf.sections) == 0:
-            raise Exception('There are no any sections')
+            raise IniKlassException('There are no any sections')
 
         return ConfigParser.to_object(conf)
