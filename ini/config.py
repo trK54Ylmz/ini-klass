@@ -59,22 +59,22 @@ class ConfigParser:
         """
         if path is None:
             if 'CONFIG' in os.environ:
-                path = os.environ['CONFIG']
+                path = os.environ.get('CONFIG')
             elif len(sys.argv) > 1:
                 path = sys.argv[1]
             else:
-                raise IniKlassException('Configuration parameter must be set')
+                raise IniKlassException('Configuration parameter must be set.')
 
         if path is None or len(path.strip()) == 0:
-            raise Exception('Configuration path is missing')
+            raise IniKlassException('Configuration path is missing.')
 
         if not os.path.exists(path):
-            raise IniKlassException(f'Configuration file does not exists "{path}"')
+            raise IniKlassException(f'Configuration file does not exists "{path}".')
 
         conf = ConfigObj(path)
 
         # size of sections must be greater than one
         if len(conf.sections) == 0:
-            raise IniKlassException('There are no any sections')
+            raise IniKlassException('There are no any sections.')
 
         return ConfigParser.to_object(conf)
