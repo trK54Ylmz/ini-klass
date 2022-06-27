@@ -1,4 +1,4 @@
-from ini import ConfigParser
+from ini import IniConfig
 from pathlib import Path
 from unittest import TestCase
 
@@ -7,7 +7,7 @@ class SimpleTest(TestCase):
     def setUp(self):
         path = Path(__file__).parent / 'simple.ini'
 
-        self.config = ConfigParser.load(str(path))
+        self.config = IniConfig.read(str(path))
 
     def test_numeric(self):
         self.assertEqual(self.config.example.id, 12)

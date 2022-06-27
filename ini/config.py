@@ -1,69 +1,42 @@
+from __future__ import annotations
+
 import os
-import re
 import sys
-from attrdict2 import AttrMap
-from configobj import ConfigObj
-from typing import Optional
+
+from .section import IniConfigSection
+
+from configparser import ConfigParser
+from typing import Any, List, Optional, Union
 
 
 class IniKlassException(Exception):
     pass
 
 
-class ConfigParser:
-    @staticmethod
-    def to_object(d: ConfigObj) -> AttrMap:
-        """
-        Convert config object to custom object
-
-        :param ConfigObj d: config object
-        :return: custom object
-        :rtype: attrdict.AttrMap
-        """
-        top = AttrMap(sequence_type=list)
-        seq = tuple, list, set, frozenset
-
-        for i, j in d.items():
-            if isinstance(j, dict):
-                setattr(top, i, ConfigParser.to_object(j))
-            elif isinstance(j, seq):
-                typed = []
-                for sj in j:
-                    if isinstance(sj, dict):
-                        typed.append(ConfigParser.to_object(sj))
-                    else:
-                        typed.append(sj)
-                setattr(top, i, typed)
-            else:
-                if j in ['true', 'false']:
-                    j = j == 'true'
-                elif re.match(r'^[0-9]+[\\.]+[0-9]+$', j):
-                    j = float(j)
-                elif j.isnumeric():
-                    if '.' in j:
-                        j = float(j)
-                    else:
-                        j = int(j)
-                setattr(top, i, j)
-        return top
+class IniConfig:
+    config: IniConfigSection
 
     @staticmethod
-    def load(path: Optional[str] = None) -> AttrMap:
+    def read(file=None, empty_to_none=False) -> IniConfig:
         """
-        Load configuration by given path or `CONFIG` environment.
-        The environment variable is primary lookup.
+        Load configuration by given path, command line argument or
+        `CONFIG` environment.
 
-        :param Optional[str] path: the configuration path
+        :param Optional[str] file: the configuration file path
         :return: the configuration object
-        :rtype: attrdict.AttrMap
+        :rtype: ini.IniConfig
         """
-        if path is None:
-            if 'CONFIG' in os.environ:
-                path = os.environ.get('CONFIG')
-            elif len(sys.argv) > 1:
-                path = sys.argv[1]
-            else:
-                raise IniKlassException('Configuration parameter must be set.')
+        c = ConfigParser(default_section=None)
+
+        path = None
+        if file is not None:
+            path = file
+        elif len(sys.argv) > 1:
+            path = sys.argv[1]
+        elif 'CONFIG' in os.environ:
+            path = os.environ.get('CONFIG')
+        else:
+            raise IniKlassException('Configuration parameter must be set.')
 
         if path is None or len(path.strip()) == 0:
             raise IniKlassException('Configuration path is missing.')
@@ -71,10 +44,41 @@ class ConfigParser:
         if not os.path.exists(path):
             raise IniKlassException(f'Configuration file does not exists "{path}".')
 
-        conf = ConfigObj(path)
+        # read configuration from local path
+        c.read(path)
 
         # size of sections must be greater than one
-        if len(conf.sections) == 0:
+        if len(c.sections()) == 0:
             raise IniKlassException('There are no any sections.')
 
-        return ConfigParser.to_object(conf)
+        ini = IniConfig()
+        ini.config = IniConfigSection(c, empty_to_none)
+
+        return ini
+
+    def __getattr__(self, key: str) -> Optional[Union[str, float, bool, List[Any]]]:
+        """
+        Get configuration parameter
+
+        :param str key: class parameter of configuration
+        :return: configuration value
+        :rtype: Optional[Union[str, float, bool, List[Any]]]
+        """
+        if not hasattr(self.config, key):
+            return None
+
+        return getattr(self.config, key)
+
+    def __repr__(self) -> str:
+        """
+        Represent class content
+
+        :return: content as text
+        :rtype: str
+        """
+        kv = dict()
+
+        for k in vars(self.config):
+            kv[k] = getattr(self, k)
+
+        return str(kv)
