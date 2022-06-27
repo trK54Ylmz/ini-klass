@@ -59,8 +59,6 @@ jobs:
         with:
           python-version: ${{ matrix.python.version }}
           architecture: ${{ matrix.platform.python-architecture }}
-      - name: Install dependencies
-        run: pip install attrdict2==0.0.1 configobj==5.0.6
       - name: Install whell
         run: pip install wheel
       - name: Lint with flake8
@@ -70,7 +68,7 @@ jobs:
         if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
       - name: Lint with pylint
         run: |
-          pip install --disable-pip-version-check pylint pylint_runner
+          pip install --disable-pip-version-check pygithub pylint pylint_runner
           pylint_runner
         if: matrix.platform.os == 'ubuntu-latest' && matrix.python.version == '3.10'
       - name: Build package 
