@@ -26,13 +26,13 @@ group = car, book, phone
 To parse ini file above,
 
 ```python
-from ini import ConfigParser
+from ini import IniConfig
 
 # read from `CONFIG` environment
-config = ConfigParser.load()
+config = IniConfig.read()
 
 # read from file
-config = ConfigParser.load('/tmp/file.ini')
+config = IniConfig.read('/tmp/file.ini')
 
 # access configuration value
 name = config.example.name
