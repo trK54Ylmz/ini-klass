@@ -1,5 +1,6 @@
-from .config import ConfigParser
+from .config import IniConfig, IniKlassException
 
 __all__ = [
-    'ConfigParser',
+    'IniConfig',
+    'IniKlassException',
 ]
