@@ -22,5 +22,5 @@ jobs:
           flake8 . --count --max-complexity=20 --max-line-length=100 --statistics
       - name: Lint with pylint
         run: |
-          pip install pylint pylint_runner
+          pip install github pylint pylint_runner
           pylint_runner
