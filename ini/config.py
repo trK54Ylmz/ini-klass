@@ -31,10 +31,10 @@ class IniConfig:
         path = None
         if file is not None:
             path = file
-        elif len(sys.argv) > 1:
-            path = sys.argv[1]
         elif 'CONFIG' in os.environ:
             path = os.environ.get('CONFIG')
+        elif len(sys.argv) > 1:
+            path = sys.argv[1]
         else:
             raise IniKlassException('Configuration parameter must be set.')
 
