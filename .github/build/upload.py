@@ -20,7 +20,7 @@ if len(ts) == 0:
 
     sys.exit(1)
 
-t = ts[-1]
+t = ts[0]
 
 rs = list(r.get_releases())
 s = list(filter(lambda r: r.tag_name == t.name, rs))
