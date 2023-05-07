@@ -34,8 +34,8 @@ class IniConfigItem:
             if not v.startswith('"') and not v.endswith('"') and ',' in v:
                 tys = []
                 items = v.split(',')
-                for sv in items:
-                    if len(items) == 2 and len(sv.strip()) == 0:
+                for idx, sv in enumerate(items):
+                    if idx == len(items) - 1 and len(sv.strip()) == 0:
                         continue
                     tys.append(self.__cast__(sv.strip(), empty_to_none))
 
