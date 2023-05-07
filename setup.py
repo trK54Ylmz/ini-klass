@@ -9,7 +9,7 @@ except Exception:
 
 setup(
     name='ini-klass',
-    version='0.0.4',
+    version='0.0.5',
     author='Tarik Yilmaz',
     author_email='tarikyilmaz.54@gmail.com',
     description=description,
