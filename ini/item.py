@@ -34,10 +34,14 @@ class IniConfigItem:
             if not v.startswith('"') and not v.endswith('"') and ',' in v:
                 tys = []
                 for sv in v.split(','):
+                    if len(sv.strip()) == 0 and not empty_to_none:
+                        continue
                     tys.append(self.__cast__(sv.strip(), empty_to_none))
 
                 setattr(self, k, tys)
             else:
+                if len(v) == 0 and not empty_to_none:
+                    continue
                 setattr(self, k, self.__cast__(v, empty_to_none))
 
     def __cast__(

@@ -7,7 +7,7 @@ class SimpleTest(TestCase):
     def setUp(self):
         path = Path(__file__).parent / 'simple.ini'
 
-        self.config = IniConfig.read(str(path))
+        self.config = IniConfig.read(str(path), empty_to_none=False)
 
     def test_numeric(self):
         self.assertEqual(self.config.example.id, 12)
@@ -23,3 +23,6 @@ class SimpleTest(TestCase):
 
     def test_list(self):
         self.assertEqual(self.config.example.group, ['car', 'book', 'phone'])
+
+    def test_empty_list(self):
+        self.assertEqual(self.config.example.detail, ['user', 'name'])
