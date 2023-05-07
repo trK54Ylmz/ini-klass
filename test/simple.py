@@ -21,8 +21,11 @@ class SimpleTest(TestCase):
     def test_float(self):
         self.assertEqual(self.config.example.salary, 100.5)
 
+    def test_null_list(self):
+        self.assertEqual(self.config.nulls.age, '')
+
     def test_list(self):
         self.assertEqual(self.config.example.group, ['car', 'book', 'phone'])
 
     def test_empty_list(self):
-        self.assertEqual(self.config.example.detail, ['user', 'name'])
+        self.assertEqual(self.config.example.detail, ['user'])
